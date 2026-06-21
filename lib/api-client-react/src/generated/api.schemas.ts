@@ -101,6 +101,8 @@ export interface LightningAlert {
   district: string;
   severity: LightningAlertSeverity;
   message: string;
+  /** @nullable */
+  messageTe?: string | null;
   isActive: boolean;
   createdAt: string;
 }
@@ -119,6 +121,7 @@ export interface LightningAlertInput {
   district: string;
   severity: LightningAlertInputSeverity;
   message: string;
+  messageTe?: string;
 }
 
 export type EmergencyAlertType = typeof EmergencyAlertType[keyof typeof EmergencyAlertType];
@@ -294,6 +297,7 @@ export interface FarmerRisk {
   riskLevel: FarmerRiskRiskLevel;
   reasons: string[];
   actions: string[];
+  actionsTe?: string[];
   /** @nullable */
   lastLocationAt?: string | null;
   computedAt: string;

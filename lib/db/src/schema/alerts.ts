@@ -6,6 +6,7 @@ export const lightningAlertsTable = pgTable("lightning_alerts", {
   district: text("district").notNull(),
   severity: text("severity").notNull(), // low, medium, high, critical
   message: text("message").notNull(),
+  messageTe: text("message_te"),        // Telugu translation (optional)
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });

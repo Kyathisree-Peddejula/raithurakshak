@@ -218,6 +218,7 @@ export const ListLightningAlertsResponseItem = zod.object({
   "district": zod.string(),
   "severity": zod.enum(['low', 'medium', 'high', 'critical']),
   "message": zod.string(),
+  "messageTe": zod.string().nullish(),
   "isActive": zod.boolean(),
   "createdAt": zod.string()
 })
@@ -230,7 +231,8 @@ export const ListLightningAlertsResponse = zod.array(ListLightningAlertsResponse
 export const CreateLightningAlertBody = zod.object({
   "district": zod.string(),
   "severity": zod.enum(['low', 'medium', 'high', 'critical']),
-  "message": zod.string()
+  "message": zod.string(),
+  "messageTe": zod.string().optional()
 })
 
 
@@ -410,6 +412,7 @@ export const GetFarmerRiskAssessmentsResponseItem = zod.object({
   "riskLevel": zod.enum(['safe', 'low', 'medium', 'high', 'critical']),
   "reasons": zod.array(zod.string()),
   "actions": zod.array(zod.string()),
+  "actionsTe": zod.array(zod.string()).optional(),
   "lastLocationAt": zod.string().nullish(),
   "computedAt": zod.string()
 })
@@ -437,6 +440,7 @@ export const GetFarmerRiskResponse = zod.object({
   "riskLevel": zod.enum(['safe', 'low', 'medium', 'high', 'critical']),
   "reasons": zod.array(zod.string()),
   "actions": zod.array(zod.string()),
+  "actionsTe": zod.array(zod.string()).optional(),
   "lastLocationAt": zod.string().nullish(),
   "computedAt": zod.string()
 })

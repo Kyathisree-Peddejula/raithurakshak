@@ -12,6 +12,8 @@ export interface LightningAlert {
   district: string;
   severity: LightningAlertSeverity;
   message: string;
+  /** @nullable */
+  messageTe?: string | null;
   isActive: boolean;
   createdAt: string;
 }

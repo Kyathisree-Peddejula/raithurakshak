@@ -20,6 +20,7 @@ export interface FarmerRisk {
   riskLevel: FarmerRiskRiskLevel;
   reasons: string[];
   actions: string[];
+  actionsTe?: string[];
   /** @nullable */
   lastLocationAt?: string | null;
   computedAt: string;

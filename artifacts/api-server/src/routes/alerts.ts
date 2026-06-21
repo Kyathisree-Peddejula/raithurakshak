@@ -18,11 +18,14 @@ router.get("/alerts/lightning", async (req, res) => {
 
 router.post("/alerts/lightning", async (req, res) => {
   try {
-    const { district, severity, message } = req.body;
+    const { district, severity, message, messageTe } = req.body;
     if (!district || !severity || !message) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    const [alert] = await db.insert(lightningAlertsTable).values({ district, severity, message, isActive: true }).returning();
+    const [alert] = await db
+      .insert(lightningAlertsTable)
+      .values({ district, severity, message, messageTe: messageTe ?? null, isActive: true })
+      .returning();
     res.status(201).json({ ...alert, createdAt: alert.createdAt.toISOString() });
   } catch (err) {
     req.log.error(err);

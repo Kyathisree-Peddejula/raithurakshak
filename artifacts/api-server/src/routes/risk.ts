@@ -25,6 +25,7 @@ interface ScoreResult {
   score: number;
   reasons: string[];
   actions: string[];
+  actionsTe: string[];
 }
 
 function computeRisk(opts: {
@@ -133,25 +134,41 @@ function computeRisk(opts: {
   const finalScore = Math.min(100, score);
   const level = getRiskLevel(finalScore);
 
-  // ── Generate recommended actions based on final level ─────────────────────
+  // ── Generate recommended actions (English + Telugu) ───────────────────────
+  const actionsTe: string[] = [];
+
   if (level === "safe") {
     actions.push("No immediate action required.");
     actions.push("Continue routine monitoring.");
+    actionsTe.push("ఇప్పుడు ఎటువంటి చర్య అవసరం లేదు.");
+    actionsTe.push("సాధారణ నిఘాను కొనసాగించండి.");
   } else if (level === "low") {
     actions.push(`Notify ${farmerName}'s family to stay alert.`);
     actions.push("Check district weather updates every 2 hours.");
     actions.push("Remind farmer to seek shelter if conditions worsen.");
+    actionsTe.push(`${farmerName} కుటుంబానికి అప్రమత్తంగా ఉండమని తెలియజేయండి.`);
+    actionsTe.push("ప్రతి 2 గంటలకు జిల్లా వాతావరణ నవీకరణలను తనిఖీ చేయండి.");
+    actionsTe.push("పరిస్థితులు తీవ్రమైతే రైతును సురక్షిత ప్రదేశానికి వెళ్లమని గుర్తు చేయండి.");
   } else if (level === "medium") {
     actions.push(`Call ${farmerName} immediately to verify their safety.`);
     actions.push("Advise farmer to move away from open fields and tall trees.");
     actions.push("Notify family members to expect a check-in call.");
     actions.push("Update farmer's GPS location.");
+    actionsTe.push(`${farmerName}కి వెంటనే ఫోన్ చేసి వారి సురక్షితత నిర్ధారించండి.`);
+    actionsTe.push("రైతును బహిరంగ పొలాలు మరియు పెద్ద చెట్ల నుండి దూరంగా వెళ్లమని సూచించండి.");
+    actionsTe.push("కుటుంబ సభ్యులకు ఫోన్ వస్తుందని తెలియజేయండి.");
+    actionsTe.push("రైతు GPS స్థానాన్ని నవీకరించండి.");
   } else if (level === "high") {
     actions.push(`⚠️ Urgently contact ${farmerName} and confirm their location.`);
     actions.push("Instruct farmer to seek permanent shelter — do NOT remain in open fields.");
     actions.push("Alert family members and ask them to reach out directly.");
     actions.push("Log a safety check-in in the emergency system.");
     actions.push("Dispatch field officer to last known location if unreachable.");
+    actionsTe.push(`⚠️ ${farmerName}ని తక్షణమే సంప్రదించి స్థానాన్ని నిర్ధారించండి.`);
+    actionsTe.push("పిడుగుల ప్రమాదం ఉంది. వెంటనే సురక్షిత ప్రదేశానికి వెళ్లండి — బహిరంగ పొలాలలో ఉండవద్దు.");
+    actionsTe.push("కుటుంబ సభ్యులను అప్రమత్తం చేయండి, వారు నేరుగా సంప్రదించమని కోరండి.");
+    actionsTe.push("అత్యవసర వ్యవస్థలో సురక్షిత తనిఖీని నమోదు చేయండి.");
+    actionsTe.push("అందుబాటులో లేకుంటే చివరి తెలిసిన స్థానానికి క్షేత్ర అధికారిని పంపండి.");
   } else {
     actions.push(`🚨 IMMEDIATE ACTION: Attempt to reach ${farmerName} by phone now.`);
     actions.push("Dispatch emergency response team to last known GPS location.");
@@ -159,9 +176,15 @@ function computeRisk(opts: {
     actions.push("File a pre-emptive emergency alert in the system.");
     actions.push("Contact local hospital and alert them to standby.");
     actions.push("Coordinate with district emergency control room.");
+    actionsTe.push(`🚨 తక్షణ చర్య: ఇప్పుడే ${farmerName}కి ఫోన్ చేయండి.`);
+    actionsTe.push("చివరి తెలిసిన GPS స్థానానికి అత్యవసర స్పందన బృందాన్ని పంపండి.");
+    actionsTe.push("కుటుంబ సభ్యులను తెలియజేయండి మరియు పొలానికి వెళ్లమని కోరండి.");
+    actionsTe.push("వ్యవస్థలో అత్యవసర హెచ్చరికను నమోదు చేయండి.");
+    actionsTe.push("స్థానిక ఆసుపత్రిని సంప్రదించి సిద్ధంగా ఉండమని తెలియజేయండి.");
+    actionsTe.push("జిల్లా అత్యవసర నియంత్రణ గదితో సమన్వయం చేసుకోండి.");
   }
 
-  return { score: finalScore, reasons, actions };
+  return { score: finalScore, reasons, actions, actionsTe };
 }
 
 async function buildRiskForFarmer(farmer: {
@@ -234,6 +257,7 @@ async function buildRiskForFarmer(farmer: {
     riskLevel: getRiskLevel(result.score),
     reasons: result.reasons,
     actions: result.actions,
+    actionsTe: result.actionsTe,
     lastLocationAt: locationRows[0]?.recordedAt?.toISOString() ?? null,
     computedAt: new Date().toISOString(),
   };

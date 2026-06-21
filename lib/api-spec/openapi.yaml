@@ -643,6 +643,8 @@ components:
           enum: [low, medium, high, critical]
         message:
           type: string
+        messageTe:
+          type: ["string", "null"]
         isActive:
           type: boolean
         createdAt:
@@ -658,6 +660,8 @@ components:
           type: string
           enum: [low, medium, high, critical]
         message:
+          type: string
+        messageTe:
           type: string
 
     EmergencyAlert:
@@ -839,6 +843,10 @@ components:
           items:
             type: string
         actions:
+          type: array
+          items:
+            type: string
+        actionsTe:
           type: array
           items:
             type: string

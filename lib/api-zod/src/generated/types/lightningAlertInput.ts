@@ -11,4 +11,5 @@ export interface LightningAlertInput {
   district: string;
   severity: LightningAlertInputSeverity;
   message: string;
+  messageTe?: string;
 }

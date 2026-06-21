@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Zap, ChevronDown, ChevronUp, AlertTriangle, CheckCircle2, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
+import { useLang, teluguRiskMessages } from "@/context/LanguageContext";
 
 type RiskLevel = "safe" | "low" | "medium" | "high" | "critical";
 
@@ -57,6 +58,7 @@ function RiskBadge({ level }: { level: RiskLevel }) {
 
 function FarmerRiskCard({ assessment }: { assessment: ReturnType<typeof useGetFarmerRiskAssessments>["data"] extends (infer T)[] | undefined ? T : never }) {
   const [expanded, setExpanded] = useState(false);
+  const { lang } = useLang();
   const level = assessment.riskLevel as RiskLevel;
   const cfg = riskConfig[level];
 
@@ -97,12 +99,21 @@ function FarmerRiskCard({ assessment }: { assessment: ReturnType<typeof useGetFa
               <p className="text-xs text-orange-600 mt-2 font-medium">⚠ No location on record</p>
             )}
 
+            {/* Critical Telugu warning */}
+            {level === "critical" && lang === "te" && (
+              <p className="mt-2 text-xs font-semibold text-red-700 bg-red-50 rounded px-2 py-1">
+                🚨 {teluguRiskMessages.critical}
+              </p>
+            )}
+
             <button
               onClick={() => setExpanded(v => !v)}
               className="mt-3 flex items-center gap-1 text-xs text-primary hover:underline font-medium"
             >
               {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              {expanded ? "Hide" : "Show"} details ({assessment.reasons.length} risk factor{assessment.reasons.length !== 1 ? "s" : ""})
+              {lang === "te"
+                ? `${expanded ? "దాచు" : "చూపు"} వివరాలు (${assessment.reasons.length} కారణాలు)`
+                : `${expanded ? "Hide" : "Show"} details (${assessment.reasons.length} risk factor${assessment.reasons.length !== 1 ? "s" : ""})`}
             </button>
           </div>
         </div>
@@ -112,7 +123,9 @@ function FarmerRiskCard({ assessment }: { assessment: ReturnType<typeof useGetFa
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Info className="w-4 h-4 text-orange-500" />
-                <span className="text-sm font-semibold">Why this score?</span>
+                <span className="text-sm font-semibold">
+                  {lang === "te" ? "ఈ స్కోర్ ఎందుకు?" : "Why this score?"}
+                </span>
               </div>
               <ul className="space-y-1.5">
                 {assessment.reasons.map((reason, i) => (
@@ -127,10 +140,15 @@ function FarmerRiskCard({ assessment }: { assessment: ReturnType<typeof useGetFa
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <AlertTriangle className="w-4 h-4 text-primary" />
-                <span className="text-sm font-semibold">Recommended Actions</span>
+                <span className="text-sm font-semibold flex items-center gap-1.5">
+                  {lang === "te" ? "సిఫార్సు చేసిన చర్యలు" : "Recommended Actions"}
+                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${lang === "te" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}>
+                    {lang === "te" ? "తె" : "EN"}
+                  </span>
+                </span>
               </div>
               <ul className="space-y-1.5">
-                {assessment.actions.map((action, i) => (
+                {(lang === "te" && assessment.actionsTe?.length ? assessment.actionsTe : assessment.actions).map((action, i) => (
                   <li key={i} className="flex items-start gap-2 text-sm">
                     <CheckCircle2 className="w-3.5 h-3.5 text-primary mt-0.5 shrink-0" />
                     <span>{action}</span>
