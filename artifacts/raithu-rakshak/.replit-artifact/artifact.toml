@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "RaithuRakshak"
+version = "1.0.0"
+id = "artifacts/raithu-rakshak"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23658
+
+[services.development]
+run = "pnpm --filter @workspace/raithu-rakshak run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/raithu-rakshak", "run", "build" ]
+publicDir = "artifacts/raithu-rakshak/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23658"
+BASE_PATH = "/"

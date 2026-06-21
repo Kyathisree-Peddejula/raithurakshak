@@ -3,13 +3,26 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: RaithuRakshak - Farmer Safety Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: farmers
+    description: Farmer registration and management
+  - name: family
+    description: Family member management
+  - name: locations
+    description: Location tracking
+  - name: alerts
+    description: Lightning and emergency alerts
+  - name: weather
+    description: Weather monitoring
+  - name: dashboard
+    description: Dashboard summary data
+
 paths:
   /healthz:
     get:
@@ -24,6 +37,390 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /farmers:
+    get:
+      operationId: listFarmers
+      tags: [farmers]
+      summary: List all farmers
+      responses:
+        "200":
+          description: List of farmers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Farmer"
+    post:
+      operationId: createFarmer
+      tags: [farmers]
+      summary: Register a new farmer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FarmerInput"
+      responses:
+        "201":
+          description: Farmer registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Farmer"
+
+  /farmers/{id}:
+    get:
+      operationId: getFarmer
+      tags: [farmers]
+      summary: Get farmer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Farmer details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Farmer"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateFarmer
+      tags: [farmers]
+      summary: Update farmer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FarmerUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Farmer"
+    delete:
+      operationId: deleteFarmer
+      tags: [farmers]
+      summary: Delete farmer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /farmers/{farmerId}/family:
+    get:
+      operationId: listFamilyMembers
+      tags: [family]
+      summary: List family members of a farmer
+      parameters:
+        - name: farmerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of family members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FamilyMember"
+    post:
+      operationId: createFamilyMember
+      tags: [family]
+      summary: Register a family member
+      parameters:
+        - name: farmerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FamilyMemberInput"
+      responses:
+        "201":
+          description: Family member registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FamilyMember"
+
+  /farmers/{farmerId}/family/{memberId}:
+    delete:
+      operationId: deleteFamilyMember
+      tags: [family]
+      summary: Remove a family member
+      parameters:
+        - name: farmerId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /farmers/{farmerId}/location:
+    get:
+      operationId: getFarmerLocation
+      tags: [locations]
+      summary: Get last known location of a farmer
+      parameters:
+        - name: farmerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Last known location
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+    post:
+      operationId: updateFarmerLocation
+      tags: [locations]
+      summary: Update farmer location
+      parameters:
+        - name: farmerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LocationInput"
+      responses:
+        "200":
+          description: Location updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Location"
+
+  /locations:
+    get:
+      operationId: listLocations
+      tags: [locations]
+      summary: Get all farmer last known locations
+      responses:
+        "200":
+          description: All farmer locations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FarmerLocationSummary"
+
+  /alerts/lightning:
+    get:
+      operationId: listLightningAlerts
+      tags: [alerts]
+      summary: List active lightning risk alerts
+      responses:
+        "200":
+          description: Lightning alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LightningAlert"
+    post:
+      operationId: createLightningAlert
+      tags: [alerts]
+      summary: Create a lightning risk alert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LightningAlertInput"
+      responses:
+        "201":
+          description: Alert created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LightningAlert"
+
+  /alerts/lightning/{id}:
+    delete:
+      operationId: deleteLightningAlert
+      tags: [alerts]
+      summary: Delete a lightning alert
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /alerts/emergency:
+    get:
+      operationId: listEmergencyAlerts
+      tags: [alerts]
+      summary: List emergency alerts
+      responses:
+        "200":
+          description: Emergency alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EmergencyAlert"
+    post:
+      operationId: createEmergencyAlert
+      tags: [alerts]
+      summary: Send an emergency alert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmergencyAlertInput"
+      responses:
+        "201":
+          description: Emergency alert sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmergencyAlert"
+
+  /alerts/emergency/{id}/resolve:
+    patch:
+      operationId: resolveEmergencyAlert
+      tags: [alerts]
+      summary: Mark an emergency alert as resolved
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Resolved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmergencyAlert"
+
+  /weather:
+    get:
+      operationId: listWeatherData
+      tags: [weather]
+      summary: List weather monitoring data for all districts
+      responses:
+        "200":
+          description: Weather data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WeatherData"
+    post:
+      operationId: upsertWeatherData
+      tags: [weather]
+      summary: Create or update weather data for a district
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WeatherDataInput"
+      responses:
+        "200":
+          description: Weather data updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WeatherData"
+
+  /dashboard/summary:
+    get:
+      operationId: getDashboardSummary
+      tags: [dashboard]
+      summary: Get dashboard summary statistics
+      responses:
+        "200":
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardSummary"
+
+  /dashboard/recent-alerts:
+    get:
+      operationId: getRecentAlerts
+      tags: [dashboard]
+      summary: Get recent combined alerts for dashboard
+      responses:
+        "200":
+          description: Recent alerts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RecentAlert"
+
+  /dashboard/district-risk:
+    get:
+      operationId: getDistrictRisk
+      tags: [dashboard]
+      summary: Get lightning risk breakdown by district
+      responses:
+        "200":
+          description: District risk data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DistrictRisk"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +431,300 @@ components:
       required:
         - status
 
+    Farmer:
+      type: object
+      required: [id, name, phone, village, district, state, registeredAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        phone:
+          type: string
+        aadhaar:
+          type: ["string", "null"]
+        village:
+          type: string
+        district:
+          type: string
+        state:
+          type: string
+        lat:
+          type: ["number", "null"]
+        lng:
+          type: ["number", "null"]
+        isActive:
+          type: boolean
+        registeredAt:
+          type: string
+
+    FarmerInput:
+      type: object
+      required: [name, phone, village, district, state]
+      properties:
+        name:
+          type: string
+          minLength: 1
+        phone:
+          type: string
+          minLength: 10
+        aadhaar:
+          type: string
+        village:
+          type: string
+        district:
+          type: string
+        state:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+
+    FarmerUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        village:
+          type: string
+        district:
+          type: string
+        state:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        isActive:
+          type: boolean
+
+    FamilyMember:
+      type: object
+      required: [id, farmerId, name, relationship, phone]
+      properties:
+        id:
+          type: integer
+        farmerId:
+          type: integer
+        name:
+          type: string
+        relationship:
+          type: string
+        phone:
+          type: string
+
+    FamilyMemberInput:
+      type: object
+      required: [name, relationship, phone]
+      properties:
+        name:
+          type: string
+        relationship:
+          type: string
+        phone:
+          type: string
+
+    Location:
+      type: object
+      required: [id, farmerId, lat, lng, recordedAt]
+      properties:
+        id:
+          type: integer
+        farmerId:
+          type: integer
+        lat:
+          type: number
+        lng:
+          type: number
+        recordedAt:
+          type: string
+
+    LocationInput:
+      type: object
+      required: [lat, lng]
+      properties:
+        lat:
+          type: number
+        lng:
+          type: number
+
+    FarmerLocationSummary:
+      type: object
+      required: [farmerId, farmerName, district, lat, lng, recordedAt]
+      properties:
+        farmerId:
+          type: integer
+        farmerName:
+          type: string
+        district:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        recordedAt:
+          type: string
+
+    LightningAlert:
+      type: object
+      required: [id, district, severity, message, isActive, createdAt]
+      properties:
+        id:
+          type: integer
+        district:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        message:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+
+    LightningAlertInput:
+      type: object
+      required: [district, severity, message]
+      properties:
+        district:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        message:
+          type: string
+
+    EmergencyAlert:
+      type: object
+      required: [id, farmerId, farmerName, type, message, isResolved, createdAt]
+      properties:
+        id:
+          type: integer
+        farmerId:
+          type: integer
+        farmerName:
+          type: string
+        type:
+          type: string
+          enum: [lightning_strike, medical, missing, other]
+        message:
+          type: string
+        lat:
+          type: ["number", "null"]
+        lng:
+          type: ["number", "null"]
+        isResolved:
+          type: boolean
+        createdAt:
+          type: string
+
+    EmergencyAlertInput:
+      type: object
+      required: [farmerId, type, message]
+      properties:
+        farmerId:
+          type: integer
+        type:
+          type: string
+          enum: [lightning_strike, medical, missing, other]
+        message:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+
+    WeatherData:
+      type: object
+      required: [id, district, temperature, humidity, windSpeed, lightningRisk, condition, updatedAt]
+      properties:
+        id:
+          type: integer
+        district:
+          type: string
+        temperature:
+          type: number
+        humidity:
+          type: number
+        windSpeed:
+          type: number
+        lightningRisk:
+          type: string
+          enum: [low, medium, high, critical]
+        condition:
+          type: string
+        updatedAt:
+          type: string
+
+    WeatherDataInput:
+      type: object
+      required: [district, temperature, humidity, windSpeed, lightningRisk, condition]
+      properties:
+        district:
+          type: string
+        temperature:
+          type: number
+        humidity:
+          type: number
+        windSpeed:
+          type: number
+        lightningRisk:
+          type: string
+          enum: [low, medium, high, critical]
+        condition:
+          type: string
+
+    DashboardSummary:
+      type: object
+      required: [totalFarmers, activeFarmers, totalFamilyMembers, activeLightningAlerts, activeEmergencyAlerts, criticalDistricts, totalDistricts]
+      properties:
+        totalFarmers:
+          type: integer
+        activeFarmers:
+          type: integer
+        totalFamilyMembers:
+          type: integer
+        activeLightningAlerts:
+          type: integer
+        activeEmergencyAlerts:
+          type: integer
+        criticalDistricts:
+          type: integer
+        totalDistricts:
+          type: integer
+
+    RecentAlert:
+      type: object
+      required: [id, type, title, message, severity, createdAt]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+          enum: [lightning, emergency]
+        title:
+          type: string
+        message:
+          type: string
+        severity:
+          type: string
+        createdAt:
+          type: string
+
+    DistrictRisk:
+      type: object
+      required: [district, riskLevel, farmerCount, alertCount]
+      properties:
+        district:
+          type: string
+        riskLevel:
+          type: string
+          enum: [low, medium, high, critical]
+        farmerCount:
+          type: integer
+        alertCount:
+          type: integer
