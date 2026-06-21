@@ -1,13 +1,25 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGetDashboardSummary, useGetRecentAlerts, useGetDistrictRisk } from "@workspace/api-client-react";
+import { useGetDashboardSummary, useGetRecentAlerts, useGetDistrictRisk, useGetFarmerRiskAssessments } from "@workspace/api-client-react";
 import { SeverityBadge } from "@/components/SeverityBadge";
-import { Users, AlertTriangle, CloudLightning, Map } from "lucide-react";
+import { Users, AlertTriangle, CloudLightning, Map, Zap, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
+import { Link } from "wouter";
+import { cn } from "@/lib/utils";
+
+const riskColors: Record<string, { bar: string; text: string; bg: string }> = {
+  safe:     { bar: "bg-green-500",  text: "text-green-700",  bg: "bg-green-50" },
+  low:      { bar: "bg-blue-500",   text: "text-blue-700",   bg: "bg-blue-50" },
+  medium:   { bar: "bg-yellow-500", text: "text-yellow-700", bg: "bg-yellow-50" },
+  high:     { bar: "bg-orange-500", text: "text-orange-700", bg: "bg-orange-50" },
+  critical: { bar: "bg-red-600",    text: "text-red-700",    bg: "bg-red-50" },
+};
 
 export default function Dashboard() {
   const { data: summary, isLoading: loadingSummary } = useGetDashboardSummary();
   const { data: recentAlerts = [], isLoading: loadingAlerts } = useGetRecentAlerts();
   const { data: districtRisk = [], isLoading: loadingRisk } = useGetDistrictRisk();
+  const { data: riskAssessments = [], isLoading: loadingRisk2 } = useGetFarmerRiskAssessments();
+  const topRisks = [...riskAssessments].sort((a, b) => b.score - a.score).slice(0, 4);
 
   return (
     <div className="space-y-6">
@@ -83,6 +95,53 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Risk Engine Widget */}
+      <Card className="border-amber-200 bg-amber-50/40">
+        <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <div className="flex items-center gap-2">
+            <Zap className="h-5 w-5 text-amber-600" />
+            <CardTitle className="text-base">Lightning Risk Engine — Top Risks</CardTitle>
+          </div>
+          <Link href="/risk">
+            <span className="flex items-center gap-1 text-xs text-primary hover:underline font-medium cursor-pointer">
+              Full report <ArrowRight className="h-3 w-3" />
+            </span>
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {loadingRisk2 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {[1,2,3,4].map(i => <div key={i} className="h-20 bg-muted animate-pulse rounded-lg" />)}
+            </div>
+          ) : topRisks.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">No farmer risk data available.</p>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {topRisks.map(a => {
+                const cfg = riskColors[a.riskLevel] ?? riskColors.safe;
+                return (
+                  <div key={a.farmerId} className={cn("rounded-lg border p-3 flex flex-col gap-2", cfg.bg)}>
+                    <div className="flex items-start justify-between gap-1">
+                      <div>
+                        <p className="font-semibold text-sm leading-tight">{a.farmerName}</p>
+                        <p className="text-xs text-muted-foreground">{a.village}</p>
+                      </div>
+                      <span className={cn("text-xl font-bold leading-none tabular-nums", cfg.text)}>{a.score}</span>
+                    </div>
+                    <div>
+                      <div className="h-1.5 rounded-full bg-black/10 overflow-hidden">
+                        <div className={cn("h-full rounded-full", cfg.bar)} style={{ width: `${a.score}%` }} />
+                      </div>
+                      <p className={cn("text-[11px] font-semibold mt-1 capitalize", cfg.text)}>{a.riskLevel.replace("_", " ")}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         <Card className="col-span-4">

@@ -13,6 +13,7 @@ import Weather from "@/pages/Weather";
 import LightningAlerts from "@/pages/LightningAlerts";
 import EmergencyAlerts from "@/pages/EmergencyAlerts";
 import Locations from "@/pages/Locations";
+import RiskEngine from "@/pages/RiskEngine";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function Router() {
         <Route path="/alerts/lightning" component={LightningAlerts} />
         <Route path="/alerts/emergency" component={EmergencyAlerts} />
         <Route path="/locations" component={Locations} />
+        <Route path="/risk" component={RiskEngine} />
         <Route component={NotFound} />
       </Switch>
     </AppLayout>

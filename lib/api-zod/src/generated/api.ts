@@ -371,3 +371,53 @@ export const GetDistrictRiskResponseItem = zod.object({
 export const GetDistrictRiskResponse = zod.array(GetDistrictRiskResponseItem)
 
 
+/**
+ * Computes a 0-100 risk score per farmer based on district lightning risk, active alerts, emergency status, and time since last contact.
+ * @summary Get lightning emergency probability scores for all farmers
+ */
+export const getFarmerRiskAssessmentsResponseScoreMin = 0;
+export const getFarmerRiskAssessmentsResponseScoreMax = 100;
+
+
+
+export const GetFarmerRiskAssessmentsResponseItem = zod.object({
+  "farmerId": zod.number(),
+  "farmerName": zod.string(),
+  "district": zod.string(),
+  "village": zod.string(),
+  "score": zod.number().min(getFarmerRiskAssessmentsResponseScoreMin).max(getFarmerRiskAssessmentsResponseScoreMax),
+  "riskLevel": zod.enum(['safe', 'low', 'medium', 'high', 'critical']),
+  "reasons": zod.array(zod.string()),
+  "actions": zod.array(zod.string()),
+  "lastLocationAt": zod.string().nullish(),
+  "computedAt": zod.string()
+})
+export const GetFarmerRiskAssessmentsResponse = zod.array(GetFarmerRiskAssessmentsResponseItem)
+
+
+/**
+ * @summary Get risk assessment for a specific farmer
+ */
+export const GetFarmerRiskParams = zod.object({
+  "farmerId": zod.coerce.number()
+})
+
+export const getFarmerRiskResponseScoreMin = 0;
+export const getFarmerRiskResponseScoreMax = 100;
+
+
+
+export const GetFarmerRiskResponse = zod.object({
+  "farmerId": zod.number(),
+  "farmerName": zod.string(),
+  "district": zod.string(),
+  "village": zod.string(),
+  "score": zod.number().min(getFarmerRiskResponseScoreMin).max(getFarmerRiskResponseScoreMax),
+  "riskLevel": zod.enum(['safe', 'low', 'medium', 'high', 'critical']),
+  "reasons": zod.array(zod.string()),
+  "actions": zod.array(zod.string()),
+  "lastLocationAt": zod.string().nullish(),
+  "computedAt": zod.string()
+})
+
+

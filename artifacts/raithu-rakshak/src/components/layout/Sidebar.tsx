@@ -6,7 +6,8 @@ import {
   CloudLightning, 
   MapPin, 
   AlertTriangle, 
-  RadioTower 
+  RadioTower,
+  Zap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ const navItems = [
   { href: "/alerts/lightning", label: "Lightning Risk", icon: RadioTower },
   { href: "/alerts/emergency", label: "Emergency Alerts", icon: AlertTriangle },
   { href: "/locations", label: "Live Locations", icon: MapPin },
+  { href: "/risk", label: "Risk Engine", icon: Zap, highlight: true },
 ];
 
 export function Sidebar() {
@@ -43,13 +45,21 @@ export function Sidebar() {
               <div
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors cursor-pointer",
-                  isActive 
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground" 
-                    : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                  isActive
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                    : "text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
+                  item.highlight && !isActive && "border border-amber-500/40 text-amber-300 hover:text-amber-200"
                 )}
               >
-                <item.icon className={cn("w-5 h-5", isActive ? "text-sidebar-primary" : "text-sidebar-foreground/60")} />
+                <item.icon className={cn(
+                  "w-5 h-5",
+                  isActive ? "text-sidebar-primary" : "text-sidebar-foreground/60",
+                  item.highlight && !isActive && "text-amber-400"
+                )} />
                 {item.label}
+                {item.highlight && !isActive && (
+                  <span className="ml-auto text-[10px] font-bold bg-amber-500 text-black px-1.5 py-0.5 rounded-full">AI</span>
+                )}
               </div>
             </Link>
           );

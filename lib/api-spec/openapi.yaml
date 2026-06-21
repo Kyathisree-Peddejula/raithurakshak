@@ -22,6 +22,8 @@ tags:
     description: Weather monitoring
   - name: dashboard
     description: Dashboard summary data
+  - name: risk
+    description: Lightning Emergency Probability Engine
 
 paths:
   /healthz:
@@ -421,6 +423,43 @@ paths:
                 items:
                   $ref: "#/components/schemas/DistrictRisk"
 
+  /risk:
+    get:
+      operationId: getFarmerRiskAssessments
+      tags: [risk]
+      summary: Get lightning emergency probability scores for all farmers
+      description: Computes a 0-100 risk score per farmer based on district lightning risk, active alerts, emergency status, and time since last contact.
+      responses:
+        "200":
+          description: List of farmer risk assessments sorted by score descending
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FarmerRisk"
+
+  /risk/{farmerId}:
+    get:
+      operationId: getFarmerRisk
+      tags: [risk]
+      summary: Get risk assessment for a specific farmer
+      parameters:
+        - name: farmerId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Farmer risk assessment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FarmerRisk"
+        "404":
+          description: Farmer not found
+
 components:
   schemas:
     HealthStatus:
@@ -728,3 +767,35 @@ components:
           type: integer
         alertCount:
           type: integer
+
+    FarmerRisk:
+      type: object
+      required: [farmerId, farmerName, district, village, score, riskLevel, reasons, actions, computedAt]
+      properties:
+        farmerId:
+          type: integer
+        farmerName:
+          type: string
+        district:
+          type: string
+        village:
+          type: string
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        riskLevel:
+          type: string
+          enum: [safe, low, medium, high, critical]
+        reasons:
+          type: array
+          items:
+            type: string
+        actions:
+          type: array
+          items:
+            type: string
+        lastLocationAt:
+          type: ["string", "null"]
+        computedAt:
+          type: string

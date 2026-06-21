@@ -247,3 +247,32 @@ export interface DistrictRisk {
   alertCount: number;
 }
 
+export type FarmerRiskRiskLevel = typeof FarmerRiskRiskLevel[keyof typeof FarmerRiskRiskLevel];
+
+
+export const FarmerRiskRiskLevel = {
+  safe: 'safe',
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+  critical: 'critical',
+} as const;
+
+export interface FarmerRisk {
+  farmerId: number;
+  farmerName: string;
+  district: string;
+  village: string;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  score: number;
+  riskLevel: FarmerRiskRiskLevel;
+  reasons: string[];
+  actions: string[];
+  /** @nullable */
+  lastLocationAt?: string | null;
+  computedAt: string;
+}
+

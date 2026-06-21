@@ -29,6 +29,7 @@ import type {
   Farmer,
   FarmerInput,
   FarmerLocationSummary,
+  FarmerRisk,
   FarmerUpdate,
   HealthStatus,
   LightningAlert,
@@ -1747,6 +1748,161 @@ export function useGetDistrictRisk<TData = Awaited<ReturnType<typeof getDistrict
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetDistrictRiskQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetFarmerRiskAssessmentsUrl = () => {
+
+
+
+
+  return `/api/risk`
+}
+
+/**
+ * Computes a 0-100 risk score per farmer based on district lightning risk, active alerts, emergency status, and time since last contact.
+ * @summary Get lightning emergency probability scores for all farmers
+ */
+export const getFarmerRiskAssessments = async ( options?: RequestInit): Promise<FarmerRisk[]> => {
+
+  return customFetch<FarmerRisk[]>(getGetFarmerRiskAssessmentsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFarmerRiskAssessmentsQueryKey = () => {
+    return [
+    `/api/risk`
+    ] as const;
+    }
+
+
+export const getGetFarmerRiskAssessmentsQueryOptions = <TData = Awaited<ReturnType<typeof getFarmerRiskAssessments>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFarmerRiskAssessments>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFarmerRiskAssessmentsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFarmerRiskAssessments>>> = ({ signal }) => getFarmerRiskAssessments({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFarmerRiskAssessments>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFarmerRiskAssessmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getFarmerRiskAssessments>>>
+export type GetFarmerRiskAssessmentsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get lightning emergency probability scores for all farmers
+ */
+
+export function useGetFarmerRiskAssessments<TData = Awaited<ReturnType<typeof getFarmerRiskAssessments>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFarmerRiskAssessments>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFarmerRiskAssessmentsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetFarmerRiskUrl = (farmerId: number,) => {
+
+
+
+
+  return `/api/risk/${farmerId}`
+}
+
+/**
+ * @summary Get risk assessment for a specific farmer
+ */
+export const getFarmerRisk = async (farmerId: number, options?: RequestInit): Promise<FarmerRisk> => {
+
+  return customFetch<FarmerRisk>(getGetFarmerRiskUrl(farmerId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFarmerRiskQueryKey = (farmerId: number,) => {
+    return [
+    `/api/risk/${farmerId}`
+    ] as const;
+    }
+
+
+export const getGetFarmerRiskQueryOptions = <TData = Awaited<ReturnType<typeof getFarmerRisk>>, TError = ErrorType<void>>(farmerId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFarmerRisk>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFarmerRiskQueryKey(farmerId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFarmerRisk>>> = ({ signal }) => getFarmerRisk(farmerId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(farmerId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFarmerRisk>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFarmerRiskQueryResult = NonNullable<Awaited<ReturnType<typeof getFarmerRisk>>>
+export type GetFarmerRiskQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get risk assessment for a specific farmer
+ */
+
+export function useGetFarmerRisk<TData = Awaited<ReturnType<typeof getFarmerRisk>>, TError = ErrorType<void>>(
+ farmerId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFarmerRisk>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFarmerRiskQueryOptions(farmerId,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

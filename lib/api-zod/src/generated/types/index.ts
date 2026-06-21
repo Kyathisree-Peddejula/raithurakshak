@@ -18,6 +18,8 @@ export * from './familyMemberInput';
 export * from './farmer';
 export * from './farmerInput';
 export * from './farmerLocationSummary';
+export * from './farmerRisk';
+export * from './farmerRiskRiskLevel';
 export * from './farmerUpdate';
 export * from './healthStatus';
 export * from './lightningAlert';
