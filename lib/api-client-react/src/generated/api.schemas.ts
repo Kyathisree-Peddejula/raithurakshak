@@ -247,6 +247,29 @@ export interface DistrictRisk {
   alertCount: number;
 }
 
+export type TimelineEventType = typeof TimelineEventType[keyof typeof TimelineEventType];
+
+
+export const TimelineEventType = {
+  emergency: 'emergency',
+  lightning_alert: 'lightning_alert',
+  location_update: 'location_update',
+  registration: 'registration',
+} as const;
+
+export interface TimelineEvent {
+  id: string;
+  type: TimelineEventType;
+  title: string;
+  description: string;
+  timestamp: string;
+  farmerId: number;
+  farmerName: string;
+  district: string;
+  /** @nullable */
+  severity?: string | null;
+}
+
 export type FarmerRiskRiskLevel = typeof FarmerRiskRiskLevel[keyof typeof FarmerRiskRiskLevel];
 
 
@@ -275,4 +298,8 @@ export interface FarmerRisk {
   lastLocationAt?: string | null;
   computedAt: string;
 }
+
+export type GetTimelineParams = {
+farmerId?: number;
+};
 

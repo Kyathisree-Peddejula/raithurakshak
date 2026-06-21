@@ -372,6 +372,27 @@ export const GetDistrictRiskResponse = zod.array(GetDistrictRiskResponseItem)
 
 
 /**
+ * @summary Get chronological incident timeline events
+ */
+export const GetTimelineQueryParams = zod.object({
+  "farmerId": zod.coerce.number().optional()
+})
+
+export const GetTimelineResponseItem = zod.object({
+  "id": zod.string(),
+  "type": zod.enum(['emergency', 'lightning_alert', 'location_update', 'registration']),
+  "title": zod.string(),
+  "description": zod.string(),
+  "timestamp": zod.string(),
+  "farmerId": zod.number(),
+  "farmerName": zod.string(),
+  "district": zod.string(),
+  "severity": zod.string().nullish()
+})
+export const GetTimelineResponse = zod.array(GetTimelineResponseItem)
+
+
+/**
  * Computes a 0-100 risk score per farmer based on district lightning risk, active alerts, emergency status, and time since last contact.
  * @summary Get lightning emergency probability scores for all farmers
  */

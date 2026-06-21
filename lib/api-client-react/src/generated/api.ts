@@ -31,12 +31,14 @@ import type {
   FarmerLocationSummary,
   FarmerRisk,
   FarmerUpdate,
+  GetTimelineParams,
   HealthStatus,
   LightningAlert,
   LightningAlertInput,
   Location,
   LocationInput,
   RecentAlert,
+  TimelineEvent,
   WeatherData,
   WeatherDataInput
 } from './api.schemas';
@@ -1748,6 +1750,90 @@ export function useGetDistrictRisk<TData = Awaited<ReturnType<typeof getDistrict
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetDistrictRiskQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getGetTimelineUrl = (params?: GetTimelineParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/timeline?${stringifiedParams}` : `/api/timeline`
+}
+
+/**
+ * @summary Get chronological incident timeline events
+ */
+export const getTimeline = async (params?: GetTimelineParams, options?: RequestInit): Promise<TimelineEvent[]> => {
+
+  return customFetch<TimelineEvent[]>(getGetTimelineUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetTimelineQueryKey = (params?: GetTimelineParams,) => {
+    return [
+    `/api/timeline`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetTimelineQueryOptions = <TData = Awaited<ReturnType<typeof getTimeline>>, TError = ErrorType<unknown>>(params?: GetTimelineParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTimeline>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetTimelineQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getTimeline>>> = ({ signal }) => getTimeline(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getTimeline>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetTimelineQueryResult = NonNullable<Awaited<ReturnType<typeof getTimeline>>>
+export type GetTimelineQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get chronological incident timeline events
+ */
+
+export function useGetTimeline<TData = Awaited<ReturnType<typeof getTimeline>>, TError = ErrorType<unknown>>(
+ params?: GetTimelineParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getTimeline>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetTimelineQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

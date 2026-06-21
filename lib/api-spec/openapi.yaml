@@ -24,6 +24,8 @@ tags:
     description: Dashboard summary data
   - name: risk
     description: Lightning Emergency Probability Engine
+  - name: timeline
+    description: Incident timeline for farmers
 
 paths:
   /healthz:
@@ -423,6 +425,27 @@ paths:
                 items:
                   $ref: "#/components/schemas/DistrictRisk"
 
+  /timeline:
+    get:
+      operationId: getTimeline
+      tags: [timeline]
+      summary: Get chronological incident timeline events
+      parameters:
+        - name: farmerId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of timeline events sorted newest first
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TimelineEvent"
+
   /risk:
     get:
       operationId: getFarmerRiskAssessments
@@ -767,6 +790,30 @@ components:
           type: integer
         alertCount:
           type: integer
+
+    TimelineEvent:
+      type: object
+      required: [id, type, title, description, timestamp, farmerId, farmerName, district]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum: [emergency, lightning_alert, location_update, registration]
+        title:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+        farmerId:
+          type: integer
+        farmerName:
+          type: string
+        district:
+          type: string
+        severity:
+          type: ["string", "null"]
 
     FarmerRisk:
       type: object

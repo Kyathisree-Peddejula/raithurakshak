@@ -7,6 +7,7 @@ import alertsRouter from "./alerts";
 import weatherRouter from "./weather";
 import dashboardRouter from "./dashboard";
 import riskRouter from "./risk";
+import timelineRouter from "./timeline";
 
 const router: IRouter = Router();
 
@@ -18,5 +19,6 @@ router.use(alertsRouter);
 router.use(weatherRouter);
 router.use(dashboardRouter);
 router.use(riskRouter);
+router.use(timelineRouter);
 
 export default router;

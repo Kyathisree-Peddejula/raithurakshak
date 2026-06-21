@@ -8,6 +8,7 @@ import {
   AlertTriangle, 
   RadioTower,
   Zap,
+  Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +21,7 @@ const navItems = [
   { href: "/alerts/emergency", label: "Emergency Alerts", icon: AlertTriangle },
   { href: "/locations", label: "Live Locations", icon: MapPin },
   { href: "/risk", label: "Risk Engine", icon: Zap, highlight: true },
+  { href: "/timeline", label: "Incident Timeline", icon: Clock },
 ];
 
 export function Sidebar() {
