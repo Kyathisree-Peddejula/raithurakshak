@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useGetFarmerRiskAssessments } from "@workspace/api-client-react";
+import type { FamilyRecommendation } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Zap, ChevronDown, ChevronUp, AlertTriangle, CheckCircle2, Info } from "lucide-react";
+import { Zap, ChevronDown, ChevronUp, AlertTriangle, CheckCircle2, Info, Users, Phone, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 import { useLang, teluguRiskMessages } from "@/context/LanguageContext";
@@ -158,8 +159,73 @@ function FarmerRiskCard({ assessment }: { assessment: ReturnType<typeof useGetFa
             </div>
           </div>
         )}
+
+        {/* Family Rescue Recommendation — shown for medium/high/critical */}
+        {assessment.familyRecommendation && (
+          <FamilyRescuePanel rec={assessment.familyRecommendation} farmerName={assessment.farmerName} />
+        )}
       </CardContent>
     </Card>
+  );
+}
+
+const familyPriorityConfig = {
+  medium:   { bg: "bg-yellow-50", border: "border-yellow-300", text: "text-yellow-900", badge: "bg-yellow-200 text-yellow-900", icon: Phone,         label: "Monitor & Contact",   labelTe: "నిఘా & సంప్రదించు" },
+  high:     { bg: "bg-orange-50", border: "border-orange-300", text: "text-orange-900", badge: "bg-orange-200 text-orange-900", icon: AlertTriangle,   label: "Verify Safety Now",  labelTe: "ఇప్పుడే సురక్షితత నిర్ధారించు" },
+  critical: { bg: "bg-red-50",    border: "border-red-400",    text: "text-red-900",    badge: "bg-red-200 text-red-900",       icon: MapPin,          label: "Go Immediately",     labelTe: "వెంటనే వెళ్లండి" },
+};
+
+function FamilyRescuePanel({ rec, farmerName }: { rec: FamilyRecommendation; farmerName: string }) {
+  const [open, setOpen] = useState(false);
+  const { lang } = useLang();
+  const priority = rec.priority as keyof typeof familyPriorityConfig;
+  const cfg = familyPriorityConfig[priority] ?? familyPriorityConfig.medium;
+  const Icon = cfg.icon;
+
+  return (
+    <div className={cn("mt-4 rounded-lg border p-3", cfg.bg, cfg.border)}>
+      <div className="flex items-start gap-2">
+        <Users className={cn("w-4 h-4 mt-0.5 shrink-0", cfg.text)} />
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap mb-1.5">
+            <span className={cn("text-xs font-bold uppercase tracking-wide", cfg.text)}>
+              {lang === "te" ? "కుటుంబ రక్షణ సిఫార్సు" : "Family Rescue Recommendation"}
+            </span>
+            <span className={cn("text-[10px] font-bold px-1.5 py-0.5 rounded-full", cfg.badge)}>
+              {lang === "te" ? rec.urgencyTe : rec.urgency}
+            </span>
+          </div>
+
+          <div className="flex items-start gap-1.5 mb-2">
+            <Icon className={cn("w-3.5 h-3.5 mt-0.5 shrink-0", cfg.text)} />
+            <p className={cn("text-sm font-medium leading-snug", cfg.text)}>
+              {lang === "te" ? rec.actionTe : rec.action}
+            </p>
+          </div>
+
+          <button
+            onClick={() => setOpen(v => !v)}
+            className={cn("flex items-center gap-1 text-xs hover:underline font-medium", cfg.text)}
+          >
+            {open ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            {lang === "te"
+              ? `${open ? "దాచు" : "చూపు"} ఎందుకు (${rec.reasons.length} కారణాలు)`
+              : `${open ? "Hide" : "Why this recommendation?"} (${rec.reasons.length} reason${rec.reasons.length !== 1 ? "s" : ""})`}
+          </button>
+
+          {open && (
+            <ul className="mt-2 space-y-1">
+              {rec.reasons.map((r, i) => (
+                <li key={i} className={cn("flex items-start gap-1.5 text-xs", cfg.text)}>
+                  <span className="mt-0.5 shrink-0">•</span>
+                  {r}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

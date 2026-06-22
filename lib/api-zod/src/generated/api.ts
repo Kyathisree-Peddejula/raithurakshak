@@ -413,6 +413,14 @@ export const GetFarmerRiskAssessmentsResponseItem = zod.object({
   "reasons": zod.array(zod.string()),
   "actions": zod.array(zod.string()),
   "actionsTe": zod.array(zod.string()).optional(),
+  "familyRecommendation": zod.union([zod.object({
+  "priority": zod.enum(['low', 'medium', 'high', 'critical']),
+  "action": zod.string(),
+  "actionTe": zod.string(),
+  "urgency": zod.string(),
+  "urgencyTe": zod.string(),
+  "reasons": zod.array(zod.string())
+}),zod.null()]).optional(),
   "lastLocationAt": zod.string().nullish(),
   "computedAt": zod.string()
 })
@@ -441,6 +449,14 @@ export const GetFarmerRiskResponse = zod.object({
   "reasons": zod.array(zod.string()),
   "actions": zod.array(zod.string()),
   "actionsTe": zod.array(zod.string()).optional(),
+  "familyRecommendation": zod.union([zod.object({
+  "priority": zod.enum(['low', 'medium', 'high', 'critical']),
+  "action": zod.string(),
+  "actionTe": zod.string(),
+  "urgency": zod.string(),
+  "urgencyTe": zod.string(),
+  "reasons": zod.array(zod.string())
+}),zod.null()]).optional(),
   "lastLocationAt": zod.string().nullish(),
   "computedAt": zod.string()
 })

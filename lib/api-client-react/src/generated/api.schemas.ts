@@ -273,6 +273,25 @@ export interface TimelineEvent {
   severity?: string | null;
 }
 
+export type FamilyRecommendationPriority = typeof FamilyRecommendationPriority[keyof typeof FamilyRecommendationPriority];
+
+
+export const FamilyRecommendationPriority = {
+  low: 'low',
+  medium: 'medium',
+  high: 'high',
+  critical: 'critical',
+} as const;
+
+export interface FamilyRecommendation {
+  priority: FamilyRecommendationPriority;
+  action: string;
+  actionTe: string;
+  urgency: string;
+  urgencyTe: string;
+  reasons: string[];
+}
+
 export type FarmerRiskRiskLevel = typeof FarmerRiskRiskLevel[keyof typeof FarmerRiskRiskLevel];
 
 
@@ -298,6 +317,7 @@ export interface FarmerRisk {
   reasons: string[];
   actions: string[];
   actionsTe?: string[];
+  familyRecommendation?: FamilyRecommendation | null;
   /** @nullable */
   lastLocationAt?: string | null;
   computedAt: string;

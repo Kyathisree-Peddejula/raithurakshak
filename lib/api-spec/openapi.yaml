@@ -819,6 +819,26 @@ components:
         severity:
           type: ["string", "null"]
 
+    FamilyRecommendation:
+      type: object
+      required: [priority, action, actionTe, urgency, urgencyTe, reasons]
+      properties:
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        action:
+          type: string
+        actionTe:
+          type: string
+        urgency:
+          type: string
+        urgencyTe:
+          type: string
+        reasons:
+          type: array
+          items:
+            type: string
+
     FarmerRisk:
       type: object
       required: [farmerId, farmerName, district, village, score, riskLevel, reasons, actions, computedAt]
@@ -850,6 +870,10 @@ components:
           type: array
           items:
             type: string
+        familyRecommendation:
+          oneOf:
+            - $ref: "#/components/schemas/FamilyRecommendation"
+            - type: "null"
         lastLocationAt:
           type: ["string", "null"]
         computedAt:

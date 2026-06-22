@@ -15,6 +15,8 @@ export * from './emergencyAlertInputType';
 export * from './emergencyAlertType';
 export * from './familyMember';
 export * from './familyMemberInput';
+export * from './familyRecommendation';
+export * from './familyRecommendationPriority';
 export * from './farmer';
 export * from './farmerInput';
 export * from './farmerLocationSummary';

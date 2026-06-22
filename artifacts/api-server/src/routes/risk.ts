@@ -28,6 +28,75 @@ interface ScoreResult {
   actionsTe: string[];
 }
 
+interface FamilyRecommendation {
+  priority: "low" | "medium" | "high" | "critical";
+  action: string;
+  actionTe: string;
+  urgency: string;
+  urgencyTe: string;
+  reasons: string[];
+}
+
+function computeFamilyRecommendation(opts: {
+  farmerName: string;
+  riskLevel: RiskLevel;
+  score: number;
+  lastLocationAt: Date | null;
+  activeAlertSeverity: string | null;
+  hasActiveEmergency: boolean;
+  weather: { lightningRisk: string } | null;
+}): FamilyRecommendation | null {
+  const { farmerName, riskLevel, score, lastLocationAt, activeAlertSeverity, hasActiveEmergency, weather } = opts;
+
+  if (riskLevel === "safe" || riskLevel === "low") return null;
+
+  const familyReasons: string[] = [];
+
+  if (hasActiveEmergency) familyReasons.push("An active emergency is on record for this farmer.");
+  if (activeAlertSeverity === "critical") familyReasons.push("A critical lightning alert is active in the district.");
+  else if (activeAlertSeverity === "high") familyReasons.push("A high severity lightning alert is active in the district.");
+  if (weather?.lightningRisk === "critical" || weather?.lightningRisk === "high") {
+    familyReasons.push(`District weather shows ${weather.lightningRisk} lightning risk.`);
+  }
+  if (!lastLocationAt) {
+    familyReasons.push("No GPS location on record — farmer's whereabouts are unknown.");
+  } else {
+    const hoursAgo = (Date.now() - lastLocationAt.getTime()) / (1000 * 60 * 60);
+    if (hoursAgo > 6) familyReasons.push(`Farmer's last location is over ${Math.floor(hoursAgo)} hours old.`);
+    else if (hoursAgo > 2) familyReasons.push(`Farmer's last location was ${Math.floor(hoursAgo)} hours ago.`);
+  }
+  if (score >= 70) familyReasons.push(`Overall risk score is ${score}/100 — immediate attention needed.`);
+
+  if (riskLevel === "medium") {
+    return {
+      priority: "medium",
+      action: `Try calling ${farmerName} to confirm they are safe. If unreachable within 30 minutes, notify the district officer.`,
+      actionTe: `${farmerName}కి ఫోన్ చేసి వారు సురక్షితంగా ఉన్నారో నిర్ధారించండి. 30 నిమిషాల్లో సంప్రదించలేకపోతే జిల్లా అధికారికి తెలియజేయండి.`,
+      urgency: "Monitor and contact",
+      urgencyTe: "నిఘా పెట్టండి మరియు సంప్రదించండి",
+      reasons: familyReasons,
+    };
+  } else if (riskLevel === "high") {
+    return {
+      priority: "high",
+      action: `Contact nearby farmers or workers to physically verify ${farmerName}'s safety. Alert the district emergency officer immediately.`,
+      actionTe: `సమీపంలో ఉన్న రైతులు లేదా పనివారిని ${farmerName} వద్దకు వెళ్లమని కోరండి. జిల్లా అత్యవసర అధికారికి వెంటనే తెలియజేయండి.`,
+      urgency: "Verify safety now",
+      urgencyTe: "ఇప్పుడే సురక్షితత నిర్ధారించండి",
+      reasons: familyReasons,
+    };
+  } else {
+    return {
+      priority: "critical",
+      action: `Go to ${farmerName}'s last known GPS location immediately. If not found, call 112 and the district emergency control room.`,
+      actionTe: `వెంటనే ${farmerName} చివరి తెలిసిన GPS స్థానానికి వెళ్లండి. కనుగొనకపోతే 112 మరియు జిల్లా అత్యవసర నియంత్రణ గదికి ఫోన్ చేయండి.`,
+      urgency: "Go immediately — life at risk",
+      urgencyTe: "వెంటనే వెళ్లండి — ప్రాణాపాయం",
+      reasons: familyReasons,
+    };
+  }
+}
+
 function computeRisk(opts: {
   farmerName: string;
   district: string;
@@ -44,6 +113,7 @@ function computeRisk(opts: {
       score: 0,
       reasons: ["Farmer is marked as inactive — not currently in the field."],
       actions: ["No action required. Farmer is not registered as active."],
+      actionsTe: ["చర్య అవసరం లేదు. రైతు సక్రియంగా నమోదు కాలేదు."],
     };
   }
 
@@ -232,20 +302,33 @@ async function buildRiskForFarmer(farmer: {
     .orderBy(desc(locationsTable.recordedAt))
     .limit(1);
 
+  const weatherArg = weather
+    ? { lightningRisk: weather.lightningRisk, windSpeed: weather.windSpeed, condition: weather.condition }
+    : null;
+  const activeAlertSeverity = alertRows[0]?.severity ?? null;
+  const hasActiveEmergency = emergencyRows.length > 0;
+  const lastLocationAt = locationRows[0]?.recordedAt ?? null;
+
   const result = computeRisk({
     farmerName: farmer.name,
     district: farmer.district,
-    weather: weather
-      ? {
-          lightningRisk: weather.lightningRisk,
-          windSpeed: weather.windSpeed,
-          condition: weather.condition,
-        }
-      : null,
-    activeAlertSeverity: alertRows[0]?.severity ?? null,
-    hasActiveEmergency: emergencyRows.length > 0,
-    lastLocationAt: locationRows[0]?.recordedAt ?? null,
+    weather: weatherArg,
+    activeAlertSeverity,
+    hasActiveEmergency,
+    lastLocationAt,
     isActive: farmer.isActive,
+  });
+
+  const riskLevel = getRiskLevel(result.score);
+
+  const familyRecommendation = computeFamilyRecommendation({
+    farmerName: farmer.name,
+    riskLevel,
+    score: result.score,
+    lastLocationAt,
+    activeAlertSeverity,
+    hasActiveEmergency,
+    weather: weatherArg,
   });
 
   return {
@@ -254,11 +337,12 @@ async function buildRiskForFarmer(farmer: {
     district: farmer.district,
     village: farmer.village,
     score: result.score,
-    riskLevel: getRiskLevel(result.score),
+    riskLevel,
     reasons: result.reasons,
     actions: result.actions,
     actionsTe: result.actionsTe,
-    lastLocationAt: locationRows[0]?.recordedAt?.toISOString() ?? null,
+    familyRecommendation,
+    lastLocationAt: lastLocationAt?.toISOString() ?? null,
     computedAt: new Date().toISOString(),
   };
 }

@@ -5,6 +5,7 @@
  * RaithuRakshak - Farmer Safety Platform API
  * OpenAPI spec version: 0.1.0
  */
+import type { FamilyRecommendation } from './familyRecommendation';
 import type { FarmerRiskRiskLevel } from './farmerRiskRiskLevel';
 
 export interface FarmerRisk {
@@ -21,6 +22,7 @@ export interface FarmerRisk {
   reasons: string[];
   actions: string[];
   actionsTe?: string[];
+  familyRecommendation?: FamilyRecommendation | null;
   /** @nullable */
   lastLocationAt?: string | null;
   computedAt: string;
