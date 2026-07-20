@@ -14,11 +14,9 @@ import {
   Activity,
   Brain,
   Radio,
-  Github,
-  Mail,
-  ExternalLink,
   CheckCircle2,
   ArrowRight,
+  Quote,
 } from "lucide-react";
 
 /* ─── Helpers ─────────────────────────────────────────────────────────── */
@@ -147,16 +145,6 @@ const workflowSteps = [
   { step: "06", label: "Emergency Response", desc: "Authorities notified; incident logged in the timeline." },
 ];
 
-const techStack = [
-  { name: "React", icon: "⚛️", desc: "UI library" },
-  { name: "TypeScript", icon: "🔷", desc: "Type-safe codebase" },
-  { name: "Node.js", icon: "🟢", desc: "Backend runtime" },
-  { name: "Express.js", icon: "🚀", desc: "REST API server" },
-  { name: "PostgreSQL", icon: "🐘", desc: "Relational database" },
-  { name: "REST APIs", icon: "🔗", desc: "Contract-first design" },
-  { name: "OpenWeather API", icon: "🌤️", desc: "Live weather data" },
-];
-
 const impacts = [
   { icon: Activity, title: "Faster Awareness", text: "Real-time alerts reach district officers within minutes of a weather event." },
   { icon: Users, title: "Informed Families", text: "Families receive clear, prioritised action guidance instead of guessing." },
@@ -187,7 +175,6 @@ export default function Landing() {
             <button onClick={scrollToAbout} className="hover:text-green-800 transition-colors">About</button>
             <a href="#features" className="hover:text-green-800 transition-colors">Features</a>
             <a href="#how-it-works" className="hover:text-green-800 transition-colors">How It Works</a>
-            <a href="#tech" className="hover:text-green-800 transition-colors">Tech Stack</a>
             <a href="#impact" className="hover:text-green-800 transition-colors">Impact</a>
           </nav>
           <Link href="/dashboard">
@@ -438,31 +425,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Tech Stack ────────────────────────────────────────────────── */}
-      <section id="tech" className="py-24 bg-gradient-to-br from-[hsl(142,64%,14%)] to-[hsl(142,64%,22%)]">
-        <div className="max-w-6xl mx-auto px-6">
-          <FadeIn className="text-center mb-14">
-            <span className="text-sm font-semibold text-amber-400 uppercase tracking-widest">Technology</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mt-2">Built with Modern Technologies</h2>
-            <p className="text-green-300 mt-3 max-w-xl mx-auto">
-              Production-grade open-source stack with contract-first API design and type safety end-to-end.
-            </p>
-          </FadeIn>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4">
-            {techStack.map((t, i) => (
-              <FadeIn key={t.name} delay={i * 50}>
-                <div className="bg-white/10 backdrop-blur border border-white/10 rounded-xl p-4 text-center hover:bg-white/20 hover:border-white/30 transition-all group">
-                  <div className="text-3xl mb-2">{t.icon}</div>
-                  <div className="font-semibold text-white text-sm">{t.name}</div>
-                  <div className="text-xs text-green-300 mt-0.5">{t.desc}</div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Impact ────────────────────────────────────────────────────── */}
       <section id="impact" className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
@@ -513,81 +475,58 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────────────── */}
-      <footer className="bg-[hsl(142,64%,12%)] text-green-200 py-12">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8 mb-10">
-            {/* Brand */}
-            <div className="md:col-span-2">
-              <div className="flex items-center gap-2.5 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-amber-400 flex items-center justify-center">
-                  <CloudLightning className="w-4 h-4 text-green-900" />
-                </div>
-                <span className="font-extrabold text-white text-lg">RaithuRakshak AI</span>
-              </div>
-              <p className="text-sm text-green-300 leading-relaxed max-w-xs">
-                An AI-powered lightning safety and emergency response platform built for farmers and district emergency teams in rural India.
-              </p>
+      {/* ── Why We Built ──────────────────────────────────────────────── */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <FadeIn>
+            <div className="text-center mb-10">
+              <span className="text-sm font-semibold text-green-700 uppercase tracking-widest">Our Story</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">
+                Why We Built RaithuRakshak AI
+              </h2>
             </div>
-
-            {/* Team / Guide */}
-            <div>
-              <h4 className="font-semibold text-white text-sm mb-3 uppercase tracking-wider">Project</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <span className="text-green-400 font-medium">Team</span>
-                  <p className="text-green-300 text-xs mt-0.5">RaithuRakshak Development Team</p>
-                </li>
-                <li>
-                  <span className="text-green-400 font-medium">Project Guide</span>
-                  <p className="text-green-300 text-xs mt-0.5">Faculty Guide, Department of CSE</p>
-                </li>
-              </ul>
-            </div>
-
-            {/* Links */}
-            <div>
-              <h4 className="font-semibold text-white text-sm mb-3 uppercase tracking-wider">Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a
-                    href="https://github.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-green-300 hover:text-white transition-colors"
-                  >
-                    <Github className="w-4 h-4" /> GitHub Repository
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="mailto:raithurakshak@example.com"
-                    className="flex items-center gap-2 text-green-300 hover:text-white transition-colors"
-                  >
-                    <Mail className="w-4 h-4" /> Contact
-                  </a>
-                </li>
-                <li>
-                  <Link href="/dashboard">
-                    <span className="flex items-center gap-2 text-green-300 hover:text-white transition-colors cursor-pointer">
-                      <ExternalLink className="w-4 h-4" /> Live Platform
-                    </span>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-green-900 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-            <p className="text-xs text-green-500">
-              &copy; {new Date().getFullYear()} RaithuRakshak AI. Built for farmer safety &amp; emergency response.
+          </FadeIn>
+          <FadeIn delay={100}>
+            <p className="text-slate-600 text-lg leading-relaxed text-center max-w-3xl mx-auto">
+              RaithuRakshak AI was developed to address a real challenge faced by farmers during lightning emergencies.
+              Farmers often work alone in open fields where weather conditions can change rapidly. During such situations,
+              families are left uncertain about the farmer's safety and whether immediate action is necessary. This platform
+              combines live weather monitoring, AI-driven lightning risk prediction, GPS location tracking, and family rescue
+              recommendations to support faster, informed decisions during critical situations.
             </p>
-            <p className="text-xs text-green-500">
-              Powered by React, TypeScript, Node.js, PostgreSQL &amp; OpenWeather API
-            </p>
-          </div>
+          </FadeIn>
         </div>
-      </footer>
+      </section>
+
+      {/* ── Our Vision ────────────────────────────────────────────────── */}
+      <section className="py-20 bg-[hsl(142,30%,97%)] border-y border-green-100">
+        <div className="max-w-4xl mx-auto px-6">
+          <FadeIn>
+            <div className="text-center mb-10">
+              <span className="text-sm font-semibold text-green-700 uppercase tracking-widest">Looking Ahead</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2">Our Vision</h2>
+            </div>
+          </FadeIn>
+          <FadeIn delay={100}>
+            <p className="text-slate-600 text-lg leading-relaxed text-center max-w-3xl mx-auto">
+              Our vision is to leverage technology to improve farmer safety, reduce emergency response delays, and provide
+              families with timely information that can help them make informed decisions during severe weather conditions.
+            </p>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── Closing Quote ─────────────────────────────────────────────── */}
+      <section className="py-16 bg-white">
+        <div className="max-w-2xl mx-auto px-6 text-center">
+          <FadeIn>
+            <Quote className="w-8 h-8 text-green-300 mx-auto mb-5" />
+            <blockquote className="text-xl md:text-2xl font-semibold text-[hsl(142,64%,22%)] leading-relaxed italic">
+              "Every minute matters during a lightning emergency. Timely information can save lives."
+            </blockquote>
+          </FadeIn>
+        </div>
+      </section>
     </div>
   );
 }
