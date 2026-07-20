@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertTriangle, Plus, CheckCircle, Phone } from "lucide-react";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { EmergencyContactChain } from "@/components/emergency/EmergencyContactChain";
 
 const EMERGENCY_TYPES = {
   lightning_strike: "Lightning Strike",
@@ -74,6 +75,7 @@ export default function EmergencyAlerts() {
 
   return (
     <div className="space-y-6">
+      {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Emergency Alerts</h1>
@@ -140,6 +142,7 @@ export default function EmergencyAlerts() {
         </Dialog>
       </div>
 
+      {/* Active alert banner */}
       {active.length > 0 && (
         <div className="rounded-lg border border-red-300 bg-red-50 p-4 flex items-center gap-3">
           <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 animate-pulse" />
@@ -149,6 +152,10 @@ export default function EmergencyAlerts() {
         </div>
       )}
 
+      {/* ── Emergency Contact Chain ── auto-triggered for Critical Risk farmers */}
+      <EmergencyContactChain />
+
+      {/* Alert log table */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">{isLoading ? "Loading..." : `${alerts.length} total emergency reports`}</CardTitle>
