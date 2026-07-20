@@ -13,7 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/farmers", label: "Farmers Registry", icon: Users },
   { href: "/family", label: "Family Management", icon: UserPlus },
   { href: "/weather", label: "Weather Radar", icon: CloudLightning },

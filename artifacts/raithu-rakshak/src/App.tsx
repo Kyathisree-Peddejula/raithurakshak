@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import NotFound from "@/pages/not-found";
+import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
 import Farmers from "@/pages/Farmers";
 import FarmerRegister from "@/pages/FarmerRegister";
@@ -19,11 +20,12 @@ import Timeline from "@/pages/Timeline";
 
 const queryClient = new QueryClient();
 
-function Router() {
+/** All app pages wrapped in the sidebar layout */
+function AppRouter() {
   return (
     <AppLayout>
       <Switch>
-        <Route path="/" component={Dashboard} />
+        <Route path="/dashboard" component={Dashboard} />
         <Route path="/farmers/register" component={FarmerRegister} />
         <Route path="/farmers/:id" component={FarmerDetail} />
         <Route path="/farmers" component={Farmers} />
@@ -37,6 +39,17 @@ function Router() {
         <Route component={NotFound} />
       </Switch>
     </AppLayout>
+  );
+}
+
+function Router() {
+  return (
+    <Switch>
+      {/* Landing page — full screen, no sidebar */}
+      <Route path="/" component={Landing} />
+      {/* All other routes use the sidebar layout */}
+      <Route component={AppRouter} />
+    </Switch>
   );
 }
 

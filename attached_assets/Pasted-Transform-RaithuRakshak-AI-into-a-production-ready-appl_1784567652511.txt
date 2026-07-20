@@ -1,0 +1,100 @@
+Transform RaithuRakshak AI into a production-ready application by adding a professional landing page while keeping all existing functionality unchanged.
+
+Requirements:
+
+1. Make the Landing Page the default route instead of opening directly to the Dashboard.
+
+2. Design a modern, responsive landing page with a clean agriculture and lightning safety theme using the existing green color palette.
+
+3. Hero Section:
+   - Title: RaithuRakshak AI
+   - Subtitle:
+     "AI-powered Lightning Safety & Emergency Response Platform for Farmers"
+   - Short description:
+     "Helping farmers and their families make faster, informed decisions during lightning emergencies through weather intelligence, AI-driven risk prediction, and emergency guidance."
+   - Buttons:
+     • Get Started → Dashboard
+     • Learn More → Scroll to About section
+
+4. Problem Statement:
+   Create a professional section explaining:
+   - Farmers often work in open fields where weather changes rapidly.
+   - Lightning strikes can become life-threatening within minutes.
+   - Families frequently don't know whether the farmer is safe or if immediate action is required.
+   - RaithuRakshak AI addresses this gap using weather intelligence, risk prediction, and rescue guidance.
+
+5. Features Section:
+   Display attractive feature cards for:
+   - Live Weather Monitoring
+   - Lightning Risk Prediction
+   - AI Risk Engine
+   - Incident Timeline
+   - Family Rescue Recommendation
+   - GPS Location Tracking
+   - Emergency Alerts
+   - English & Telugu Support
+
+6. How It Works:
+   Show a professional workflow:
+
+   Register Farmer
+        ↓
+   Live Weather Monitoring
+        ↓
+   Lightning Risk Analysis
+        ↓
+   AI Risk Prediction
+        ↓
+   Family Rescue Recommendation
+        ↓
+   Emergency Response
+
+7. Technology Stack:
+   Show technologies using professional cards/icons:
+   - React
+   - TypeScript
+   - Node.js
+   - Express.js
+   - PostgreSQL
+   - REST APIs
+   - OpenWeather API
+
+8. Project Impact Section:
+   Explain that the platform helps:
+   - Improve awareness during lightning emergencies
+   - Support faster family decision-making
+   - Reduce emergency response delays
+   - Assist authorities with better situational awareness
+
+9. Footer:
+   Include:
+   - Project Name
+   - Team
+   - Project Guide
+   - GitHub
+   - Contact
+
+10. UI Requirements:
+   - Smooth scrolling
+   - Professional animations
+   - Responsive design
+   - Clean typography
+   - Modern cards
+   - Consistent spacing
+   - Professional icons
+   - Attractive hero background related to agriculture and weather
+
+11. Do NOT modify or remove any existing functionality.
+Keep all existing modules exactly as they are:
+- Dashboard
+- Weather Monitoring
+- Lightning Alerts
+- Risk Engine
+- Family Rescue Recommendation Engine
+- Incident Timeline
+- Emergency Alerts
+- Farmer Management
+- Telugu Language Support
+- Live Weather API Integration
+
+12. The application should feel like a complete government/public safety platform suitable for presentation, GitHub, and placement interviews.
