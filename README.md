@@ -5,24 +5,6 @@
 
 ---
 
-## 📋 Table of Contents
-
-1. [Project Overview](#project-overview)
-2. [Real-World Inspiration](#real-world-inspiration)
-3. [Problem Statement](#problem-statement)
-4. [Objectives](#objectives)
-5. [Features](#features)
-6. [System Architecture](#system-architecture)
-7. [Technology Stack](#technology-stack)
-8. [Database Design](#database-design)
-9. [API Structure](#api-structure)
-10. [Installation Guide](#installation-guide)
-11. [Future Enhancements](#future-enhancements)
-12. [Resume Description](#resume-description)
-13. [Team Members](#team-members)
-
----
-
 ## 🌾 Project Overview
 
 **RaithuRakshak** is a full-stack web application designed for district-level emergency management teams to monitor, protect, and respond to lightning-related emergencies in rural farming communities across India.
@@ -129,7 +111,7 @@ There is a critical need for a **lightweight, web-based operational platform** t
                          │ HTTP / JSON
                          ▼
 ┌──────────────────────────────────────────────────────────┐
-│              Reverse Proxy (Replit Router)                │
+│            Reverse Proxy / API Gateway                   │
 │          Routes /api/* → Port 8080                        │
 └────────────────────────┬─────────────────────────────────┘
                          │
@@ -358,8 +340,8 @@ All endpoints are prefixed with `/api`.
 
 **1. Clone the repository**
 ```bash
-git clone https://github.com/your-username/raithu-rakshak.git
-cd raithu-rakshak
+git clone https://github.com/Kyathisree-Peddejula/raithurakshak.git
+cd raithurakshak
 ```
 
 **2. Install dependencies**
@@ -420,36 +402,6 @@ pnpm --filter @workspace/api-spec run codegen
 
 ---
 
-## 📄 Resume Description
-
-The following descriptions are ready to copy into your resume or LinkedIn profile. Choose the one that fits your role.
-
-### If you built the full stack:
-> **RaithuRakshak — Farmer Lightning Safety Platform** *(Full Stack Developer)*
-> Designed and developed a district-level emergency management web application to protect rural farmers from lightning-related fatalities in India. Built a contract-first REST API using Node.js, Express, and PostgreSQL with Drizzle ORM, and a responsive React + TypeScript frontend with real-time dashboards. Implemented a farmer registry, GPS location tracking, severity-graded lightning alert system, emergency reporting workflow, and weather monitoring across districts. Used OpenAPI 3.1 with Orval codegen to maintain type-safe contracts between frontend and backend in a pnpm monorepo.
-
-### If you built the frontend:
-> **RaithuRakshak — Farmer Lightning Safety Platform** *(Frontend Developer)*
-> Built a responsive React + TypeScript command dashboard for district emergency officers to monitor farmer safety during lightning events. Implemented real-time data fetching with TanStack React Query, client-side routing with Wouter, and a component library using shadcn/ui and Tailwind CSS. Designed a severity-coded alert system UI, farmer registration forms, GPS location tracker, and district weather radar — all driven by auto-generated OpenAPI hooks.
-
-### If you built the backend:
-> **RaithuRakshak — Farmer Lightning Safety Platform** *(Backend Developer)*
-> Developed a RESTful API using Node.js, Express 5, and TypeScript for a rural farmer safety platform serving district emergency teams. Designed a normalized PostgreSQL schema with six tables covering farmer profiles, family members, GPS locations, lightning alerts, emergency incidents, and weather data. Implemented Zod-validated endpoints, Drizzle ORM queries, structured Pino logging, and an OpenAPI 3.1 specification driving full-stack type safety via Orval codegen.
-
----
-
-## 👥 Team Members
-
-| Name | Role | Contributions |
-|---|---|---|
-| *(Your Name)* | Full Stack Developer | System architecture, API design, database schema, frontend UI |
-| | | |
-| | | |
-
-> **Note:** Update this section with your actual team members' names, roles, and contributions before submitting.
-
----
-
 ## 📊 Project Stats
 
 | Metric | Count |
@@ -461,11 +413,6 @@ The following descriptions are ready to copy into your resume or LinkedIn profil
 | Emergency Types | 3 (Lightning Strike, Medical, Missing) |
 | Alert Severity Levels | 4 (Critical, High, Medium, Low) |
 
----
-
-## 📜 License
-
-This project was built as an academic and social-impact project. It is open for educational and non-commercial use.
 
 ---
 
